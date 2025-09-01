@@ -59,17 +59,38 @@ async function getRandomCardId() {
 
 async function createCardImage(randomIdCard, fieldSide) {
     const cardImage = document.createElement("img");
-    cardImage.setAttribute("height", "100px");
-    cardImage.setAttribute("src", "./src/assets/icons/card-back.png");
+    
+    // Responsivo: ajustar altura baseado no tamanho da tela
+    const isMobile = window.innerWidth <= 768;
+    const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+    
+    let cardHeight = "100px";
+    if (isMobile) {
+        cardHeight = "70px";
+    } else if (isTablet) {
+        cardHeight = "80px";
+    }
+    
+    cardImage.setAttribute("height", cardHeight);
+    cardImage.setAttribute("src", `${pathImages}card-back.png`);
     cardImage.setAttribute("data-id", randomIdCard);
     cardImage.classList.add("card");
 
     if (fieldSide === playerSides.player1) {
+        // Para dispositivos móveis, usar tanto mouseover quanto touchstart
+        if ('ontouchstart' in window) {
+            cardImage.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                drawSelectedCard(randomIdCard);
+            });
+        }
+        
         cardImage.addEventListener("mouseover", () => {
             drawSelectedCard(randomIdCard);
         });
 
-        cardImage.addEventListener("click", () => {
+        cardImage.addEventListener("click", (e) => {
+            e.preventDefault();
             setCardsField(cardImage.getAttribute("data-id"));
         });
     }
@@ -78,8 +99,7 @@ async function createCardImage(randomIdCard, fieldSide) {
 }
 
 async function setCardsField(cardId) {
-
-    //remove todas as cartas antes
+    // Remove todas as cartas antes
     await removeAllCardsImages();
 
     let computerCardId = await getRandomCardId();
@@ -163,7 +183,7 @@ async function removeAllCardsImages() {
 async function drawSelectedCard(index) {
     state.cardSprites.avatar.src = cardData[index].img;
     state.cardSprites.name.innerText = cardData[index].name;
-    state.cardSprites.type.innerText = "Attibute: " + cardData[index].type;
+    state.cardSprites.type.innerText = "Attribute: " + cardData[index].type;
 }
 
 async function drawCards(cardNumbers, fieldSide) {
@@ -176,7 +196,7 @@ async function drawCards(cardNumbers, fieldSide) {
 }
 
 async function resetDuel() {
-    state.cardSprites.avatar.src = ""
+    state.cardSprites.avatar.src = "";
     state.actions.button.style.display = "none";
 
     state.fieldCards.player.style.display = "none";
@@ -190,18 +210,65 @@ async function playerAudio(status) {
 
     try {
         audio.play();
-    } catch { }
+    } catch (error) {
+        console.log("Audio playback failed:", error);
+    }
 }
 
-function init() {
+// Função para redimensionar cartas quando a janela muda de tamanho
+function handleResize() {
+    const cards = document.querySelectorAll('.card');
+    const isMobile = window.innerWidth <= 768;
+    const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+    
+    let cardHeight = "100px";
+    if (isMobile) {
+        cardHeight = "70px";
+    } else if (isTablet) {
+        cardHeight = "80px";
+    }
+    
+    cards.forEach(card => {
+        card.setAttribute("height", cardHeight);
+    });
+}
 
+// Event listener para redimensionamento
+window.addEventListener('resize', handleResize);
+
+// Event listener para orientação móvel
+window.addEventListener('orientationchange', () => {
+    setTimeout(handleResize, 100);
+});
+
+function init() {
     ShowHiddenCardFieldsImages(false);
 
     drawCards(5, playerSides.player1);
     drawCards(5, playerSides.computer);
 
     const bgm = document.getElementById("bgm");
-    bgm.play();
+    if (bgm) {
+        // Tentar reproduzir o BGM, mas lidar com bloqueio de autoplay
+        bgm.play().catch(() => {
+            console.log("Autoplay was prevented. User interaction required.");
+            
+            // Adicionar event listener para primeira interação do usuário
+            const playAudioOnInteraction = () => {
+                bgm.play();
+                document.removeEventListener('click', playAudioOnInteraction);
+                document.removeEventListener('touchstart', playAudioOnInteraction);
+            };
+            
+            document.addEventListener('click', playAudioOnInteraction);
+            document.addEventListener('touchstart', playAudioOnInteraction);
+        });
+    }
 }
 
-init();
+// Aguardar o DOM estar totalmente carregado
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}

@@ -1,5 +1,6 @@
 body {
     cursor: url("../assets/cursor/yamiyugicursorGLOW.png"), default;
+    overflow-x: hidden;
 }
 
 button,
@@ -11,17 +12,21 @@ a:hover{
 }
 
 .bg-video {
-    position: absolute;
+    position: fixed;
     z-index: -2;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     display: flex;
     justify-content: center;
+    top: 0;
+    left: 0;
 }
 
 .bg-video video {
-    height: 100vw;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .bg-video::after {
@@ -38,7 +43,9 @@ a:hover{
     position: relative;
     z-index: 3;
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 1rem;
+    gap: 1rem;
 }
 
 .container__left {
@@ -48,21 +55,43 @@ a:hover{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    padding: 1rem;
 }
 
 .container__right {
     width: 65%;
-
 }
 
 .score_box {
     background-color: #fff;
     padding: 30px;
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+    max-width: 300px;
 }
 
 .frame {
     border: 3px solid #000;
     border-radius: 5px;
+}
+
+.menu_avatar {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #daa520;
+    border-radius: 8px;
+}
+
+.menu_avatar img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .card_details {
@@ -74,11 +103,13 @@ a:hover{
     justify-content: space-between;
     height: 6rem;
     width: 100%;
+    max-width: 300px;
+    text-align: center;
 }
 
 #card-name {
     font-size: 1rem;
-
+    margin-bottom: 0.5rem;
 }
 
 #card-type {
@@ -91,6 +122,7 @@ a:hover{
     flex-direction: column;
     justify-content: space-between;
     padding: 0.3rem;
+    gap: 1rem;
 }
 
 .card-versus__container {
@@ -100,6 +132,8 @@ a:hover{
     align-content: center;
     padding-top: 0.1rem;
     height: 300px;
+    flex-grow: 1;
+    justify-content: center;
 }
 
 .versus-top,
@@ -107,6 +141,11 @@ a:hover{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.versus-top {
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .versus-bottom {
@@ -124,6 +163,9 @@ a:hover{
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    padding: 0.5rem;
+    overflow-x: auto;
+    gap: 0.5rem;
 }
 
 .card-infield {
@@ -131,14 +173,328 @@ a:hover{
     width: 8rem;
     border: 1px solid #fff;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.card-infield img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
 }
 
 .card {
     transition: transform 0.2s;
+    border-radius: 6px;
+    flex-shrink: 0;
 }
 
 .card:hover {
     transform: scale(1.2);
+}
+
+/* Tablet Styles - 768px to 1024px */
+@media screen and (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .container__left {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        min-height: auto;
+        padding: 0.5rem;
+        min-width: auto;
+    }
+
+    .container__right {
+        width: 100%;
+        flex-grow: 1;
+    }
+
+    .score_box {
+        padding: 20px;
+        font-size: 0.9rem;
+        max-width: 200px;
+    }
+
+    .menu_avatar {
+        max-width: 200px;
+        height: 150px;
+    }
+
+    .card_details {
+        max-width: 200px;
+        height: auto;
+        min-height: 80px;
+        padding: 0.8rem;
+    }
+
+    #card-name {
+        font-size: 0.9rem;
+    }
+
+    #card-type {
+        font-size: 0.8rem;
+    }
+
+    .card-box__container {
+        height: auto;
+        min-height: calc(100vh - 200px);
+    }
+
+    .card-versus__container {
+        height: 250px;
+        min-height: 250px;
+    }
+
+    .card-infield {
+        height: 140px;
+        width: 100px;
+    }
+
+    .versus-top img {
+        max-height: 60px;
+        width: auto;
+    }
+
+    .card-box {
+        height: 100px;
+    }
+
+    .card {
+        height: 80px;
+    }
+}
+
+/* Mobile Styles - até 768px */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 0.25rem;
+        gap: 0.25rem;
+    }
+
+    .container__left {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        justify-content: flex-start;
+    }
+
+    .score_box {
+        padding: 15px;
+        font-size: 0.8rem;
+        max-width: 100%;
+    }
+
+    .menu_avatar {
+        max-width: 250px;
+        height: 120px;
+    }
+
+    .card_details {
+        max-width: 100%;
+        height: auto;
+        min-height: 60px;
+        padding: 0.5rem;
+    }
+
+    #card-name {
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+    }
+
+    #card-type {
+        font-size: 0.7rem;
+    }
+
+    .card-box__container {
+        height: auto;
+        min-height: calc(100vh - 250px);
+    }
+
+    .card-versus__container {
+        height: 200px;
+        min-height: 200px;
+        padding: 0.5rem;
+    }
+
+    .versus-top {
+        gap: 0.5rem;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .card-infield {
+        height: 120px;
+        width: 80px;
+    }
+
+    .versus-top img {
+        max-height: 50px;
+        width: auto;
+        flex-shrink: 0;
+        order: 2;
+    }
+
+    .card-infield:first-child {
+        order: 1;
+    }
+
+    .card-infield:last-child {
+        order: 3;
+    }
+
+    .card-box {
+        height: 90px;
+        padding: 0.25rem;
+        gap: 0.25rem;
+    }
+
+    .card {
+        height: 70px;
+        min-width: 50px;
+    }
+
+    .card:hover {
+        transform: scale(1.1);
+    }
+}
+
+/* Small Mobile Styles - até 480px */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 0.1rem;
+    }
+
+    .container__left {
+        padding: 0.25rem;
+        gap: 0.25rem;
+    }
+
+    .score_box {
+        padding: 10px;
+        font-size: 0.7rem;
+    }
+
+    .menu_avatar {
+        height: 100px;
+        max-width: 200px;
+    }
+
+    .card_details {
+        padding: 0.4rem;
+        min-height: 50px;
+    }
+
+    #card-name {
+        font-size: 0.7rem;
+    }
+
+    #card-type {
+        font-size: 0.6rem;
+    }
+
+    .card-versus__container {
+        height: 180px;
+        min-height: 180px;
+        padding: 0.25rem;
+    }
+
+    .card-infield {
+        height: 100px;
+        width: 70px;
+    }
+
+    .versus-top img {
+        max-height: 40px;
+    }
+
+    .card-box {
+        height: 80px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .card {
+        height: 60px;
+        min-width: 45px;
+    }
+}
+
+/* Landscape Mobile - para celulares em modo paisagem */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .container {
+        flex-direction: row;
+        padding: 0.25rem;
+    }
+
+    .container__left {
+        width: 30%;
+        flex-direction: column;
+        justify-content: space-around;
+        min-width: 200px;
+    }
+
+    .container__right {
+        width: 70%;
+    }
+
+    .score_box {
+        padding: 10px;
+        font-size: 0.7rem;
+    }
+
+    .menu_avatar {
+        height: 80px;
+        max-width: 150px;
+    }
+
+    .card_details {
+        min-height: 40px;
+        padding: 0.3rem;
+    }
+
+    #card-name {
+        font-size: 0.6rem;
+    }
+
+    #card-type {
+        font-size: 0.5rem;
+    }
+
+    .card-versus__container {
+        height: 150px;
+        min-height: 150px;
+    }
+
+    .card-infield {
+        height: 80px;
+        width: 55px;
+    }
+
+    .versus-top img {
+        max-height: 30px;
+    }
+
+    .card-box {
+        height: 60px;
+    }
+
+    .card {
+        height: 50px;
+    }
 }
 
 .debug {
